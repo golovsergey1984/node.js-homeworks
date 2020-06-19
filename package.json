@@ -1,0 +1,20 @@
+{
+    "name": "hw1-contacts",
+    "version": "1.0.0",
+    "description": "Node.js 1st hw",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "dev": "nodemon index.js",
+        "start": "node index.js"
+    },
+    "author": "Sergey_Golov <air@sergeygolov.pp.ua>",
+    "license": "ISC",
+    "devDependencies": {
+        "nodemon": "^2.0.4"
+    },
+    "dependencies": {
+        "shortid": "^2.2.15",
+        "yargs": "^15.3.1"
+    }
+}

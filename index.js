@@ -1,0 +1,1 @@
+console.log("Golov, everything is ok");
