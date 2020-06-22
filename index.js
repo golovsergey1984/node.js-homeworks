@@ -1,44 +1,20 @@
-const yargs = require("yargs");
-const contactsDbFunctions = require("./contacts")
+const express = require("express");
+const morgan = require('morgan')
+const PORT = 3000;
+const app = express();
+const cors = require("cors")
+const { userRouter } = require("./user/user.router");
 
-// проверка работоспособности функций
-
-/* contactsDbFunctions.listContacts() */
-/* contactsDbFunctions.getContactById(5) */
-/* contactsDbFunctions.addContact("Mango", "mango@gmail.com", "322-22-22") */
-/* contactsDbFunctions.removeContact(11) */
-
-const argv = yargs
-    .string("action")
-    .number("id")
-    .string("name")
-    .string("email")
-    .string("phone")
-    .argv
-
-/* console.table(argv) */
-
-function invokeAction({ action, id, name, email, phone }) {
-    switch (action) {
-        case 'list':
-            contactsDbFunctions.listContacts()
-            break;
-
-        case 'get':
-            contactsDbFunctions.getContactById(id)
-            break;
-
-        case 'add':
-            contactsDbFunctions.addContact(name, email, phone)
-            break;
-
-        case 'remove':
-            contactsDbFunctions.removeContact(id)
-            break;
-
-        default:
-            console.warn('\x1B[31m Unknown action type!');
-    }
+const corsOptions = {
+    origin: '*' //тут описываем uri, с которых возможен доступ к бд. Если стоит '*', значит доступ разрешен всем
 }
 
-invokeAction(argv);
+app.use(cors(corsOptions))
+app.use(morgan('combined'))
+
+app.use(express.json())
+app.use('/api/contacts', userRouter)
+
+app.listen(PORT, () => {
+    console.log('Server listening on ' + PORT + ' port')
+});
