@@ -1,0 +1,27 @@
+{
+    "name": "hw1-contacts",
+    "version": "1.0.0",
+    "description": "Node.js 2nd hw",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "dev": "nodemon -r esm index.js",
+        "start": "node -r esm index.js"
+    },
+    "author": "Sergey_Golov <air@sergeygolov.pp.ua>",
+    "license": "ISC",
+    "devDependencies": {
+        "nodemon": "^2.0.4"
+    },
+    "dependencies": {
+        "@hapi/joi": "^17.1.1",
+        "cors": "^2.8.5",
+        "dotenv": "^8.2.0",
+        "esm": "^3.2.25",
+        "express": "^4.17.1",
+        "mongoose": "^5.9.20",
+        "morgan": "^1.10.0",
+        "shortid": "^2.2.15",
+        "yargs": "^15.3.1"
+    }
+}
