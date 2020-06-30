@@ -1,19 +1,18 @@
-import Contact from "./users.model"
+import User from "./users.model"
 
 export const getUsersController = async (req, res) => {
     try {
-        const contacts = await Contact.getContact()
+        const contacts = await User.getUser()
         res.status(200).json(contacts)
 
     } catch (err) {
-        console.log(err)
         res.status(500).send("Server error")
     }
 }
 
 export const createUserController = async (req, res) => {
     try {
-        const createdContact = await Contact.createContact(req.body)
+        const createdContact = await User.createUser(req.body)
         res.status(201).json(createdContact)
     }
     catch (err) {
@@ -23,11 +22,10 @@ export const createUserController = async (req, res) => {
 
 export const findUserController = async (req, res) => {
     try {
-        const contacts = await Contact.getContactById(req.params.id)
+        const contacts = await User.getUserById(req.params.id)
         res.status(200).json(contacts)
 
     } catch (err) {
-        console.log(err)
         res.status(500).send("Server error")
     }
 }
@@ -38,22 +36,35 @@ export const updateUserController = async (req, res) => {
         return res.status(400).json({ "message": "missing fields" })
     }
     try {
-        const contacts = await Contact.updateUser(req.body)
+        const contacts = await User.updateUser(req.body)
         res.status(200).json(contacts)
 
     } catch (err) {
-        console.log(err)
         res.status(500).send("Server error")
     }
 }
 
 export const deleteUserController = async (req, res) => {
     try {
-        await Contact.deleteUser(req.params.id)
+        await User.deleteUser(req.params.id)
         res.status(200).json({ "message": "contact deleted" })
 
     } catch (err) {
-        console.log(err)
+        res.status(500).send("Server error")
+    }
+}
+
+
+export const findUserByToken = async (req, res) => {
+    try {
+        const contact = await User.getUserById(req.user.id)
+        const user = {
+            "email": contact.email,
+            "subscription": contact.subscription
+        }
+        res.status(200).json(user)
+
+    } catch (err) {
         res.status(500).send("Server error")
     }
 }

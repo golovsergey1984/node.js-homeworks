@@ -5,6 +5,7 @@ import express from "express"
 import mongoose from "mongoose"
 import morgan from "morgan"
 import cors from "cors"
+import authRouter from "./auth/auth.router"
 import userRouter from "./users/user.router"
 const PORT = process.env.PORT || 3000;
 
@@ -15,12 +16,12 @@ const corsOptions = {
 const runServer = async () => {
     const app = express();
     try {
-        const result = await mongoose.connect(process.env.DB_URI, { useUnifiedTopology: true });
-        /* console.log(result) */
+        await mongoose.connect(process.env.DB_URI, { useUnifiedTopology: true });
         console.log("Database connection successful")
         app.use(cors(corsOptions))
         /* app.use(morgan('combined')) */
         app.use(express.json())
+        app.use("/auth", authRouter)
         app.use("/user", userRouter)
 
         app.listen(PORT, () => {
@@ -35,5 +36,3 @@ const runServer = async () => {
 
 }
 runServer();
-
-

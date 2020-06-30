@@ -1,13 +1,24 @@
 import { Router } from "express"
-import { getUsersController, createUserController, findUserController, updateUserController, deleteUserController } from "./user.controller"
+import {
+    getUsersController,
+    createUserController,
+    findUserController,
+    updateUserController,
+    deleteUserController,
+    findUserByToken,
+} from "./user.controller"
 import { userValidateMiddleware } from "./user.validator"
+import { tokenMiddleware } from "../middlewares/auth.middleware"
 
 const userRouter = Router()
+userRouter.get("/current", tokenMiddleware, findUserByToken)
+userRouter.get("/", tokenMiddleware, getUsersController)
+userRouter.post("/", tokenMiddleware, userValidateMiddleware, createUserController)
+userRouter.get("/:id", tokenMiddleware, findUserController)
 
-userRouter.get("/", getUsersController)
-userRouter.post("/", userValidateMiddleware, createUserController)
-userRouter.get("/:id", findUserController)
-userRouter.patch("/", updateUserController)
-userRouter.delete("/:id", deleteUserController)
+userRouter.patch("/", tokenMiddleware, updateUserController)
+userRouter.delete("/:id", tokenMiddleware, deleteUserController)
+
+
 
 export default userRouter
