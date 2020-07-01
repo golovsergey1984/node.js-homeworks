@@ -1,5 +1,5 @@
 import mongoose, { Schema } from "mongoose";
-
+import fs from 'fs'
 
 const userSchema = new Schema({
     email: String,
@@ -9,6 +9,7 @@ const userSchema = new Schema({
         enum: ["free", "pro", "premium"],
         default: "free"
     },
+    avatarURL: String,
     token: String
 })
 
@@ -43,7 +44,13 @@ class User {
     updateToken = (id, tokenData) => {
         return this.contact.findByIdAndUpdate(id, { token: tokenData })
     }
-
+    deleteUserAvatar = (oldAvatarFileName) => {
+        const pathToFileToDelete = 'public/images/' + oldAvatarFileName
+        fs.unlink(pathToFileToDelete, function (err) {
+            if (err) return console.log(err);
+            console.log('file deleted successfully');
+        });
+    }
 }
 
 export default new User();
