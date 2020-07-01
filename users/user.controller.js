@@ -23,6 +23,7 @@ export const createUserController = async (req, res) => {
 export const findUserController = async (req, res) => {
     try {
         const contacts = await User.getUserById(req.params.id)
+
         res.status(200).json(contacts)
 
     } catch (err) {
@@ -69,3 +70,26 @@ export const findUserByToken = async (req, res) => {
     }
 }
 
+export const uploadAvatarController = async (req, res) => {
+
+    try {
+        const oldUserAvatar = await User.getUserById(req.user.id)
+        const oldAvatarFileName = oldUserAvatar.avatarURL.substr(oldUserAvatar.avatarURL.lastIndexOf('/') + 1);
+        User.deleteUserAvatar(oldAvatarFileName)
+    } catch (e) { res.status(500).send("Server error") }
+    try {
+        const { path } = req.file;
+        const data = {
+            id: req.user.id,
+            avatarURL: req.protocol + '://' + req.headers.host + '/images/' + req.file.filename,
+            /* avatarURL: path, */
+        }
+        const user = await User.updateUser(data)
+        const newUserAvatar = user.avatarURL
+        res.status(200).json({ "avatarURL": newUserAvatar })
+    }
+    catch (err) {
+        res.status(500).send("Server error")
+    }
+
+}

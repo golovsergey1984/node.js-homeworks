@@ -3,8 +3,14 @@ import { salt } from "../config"
 import User from "../users/users.model"
 import { userLoginValidator } from "./auth.validator"
 import { createToken } from "../services/auth.service"
+import { firstAvatarGenerator } from "../services/avatar_generator"
+
+import fs from 'fs.extra'
+
+
 
 export const registrationController = async (req, res) => {
+    firstAvatarGenerator(req)
 
     try {
         const emailIsset = await User.getUserbyQuery({ email: req.body.email });
@@ -13,7 +19,17 @@ export const registrationController = async (req, res) => {
             return
         }
         const hashPassword = await bcrypt.hash(req.body.password, salt)
-        const user = { ...req.body, password: hashPassword }
+        const oldPath = req.user.avatarPath
+        const newFile = Date.now() + '.png'
+        const newPath = './public/images/' + newFile
+        fs.move(oldPath, newPath, function (err) {
+            if (err) { throw err; }
+            console.log("All files successfully moved");
+
+        });
+        const firstAvatarImg = req.protocol + '://' + req.headers.host + '/images/' + newFile
+
+        const user = { ...req.body, password: hashPassword, avatarURL: firstAvatarImg }
         await User.createUser(user)
         res.status(201).json(user)
     } catch (error) {

@@ -3,6 +3,7 @@ import { userValidateMiddleware } from "../users/user.validator"
 import { registrationController, loginController, logOutController } from "./auth.controller"
 import { tokenMiddleware } from "../middlewares/auth.middleware"
 
+
 const authRouter = Router()
 
 authRouter.post("/register", userValidateMiddleware, registrationController)
