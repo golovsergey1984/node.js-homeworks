@@ -15,6 +15,3 @@ export const avatarUploader = () => {
 
     return multer({ storage })
 }
-
-
-

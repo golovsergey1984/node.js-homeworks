@@ -1,6 +1,7 @@
 import mongoose, { Schema } from "mongoose";
 import fs from 'fs'
 
+
 const userSchema = new Schema({
     email: String,
     password: String,
@@ -10,6 +11,7 @@ const userSchema = new Schema({
         default: "free"
     },
     avatarURL: String,
+    verificationToken: String,
     token: String
 })
 
@@ -35,7 +37,7 @@ class User {
     }
     updateUser = (user) => {
         const { id, ...userModel } = user //из объекта вычленяет id, а всё остальное равно userModel
-        return this.contact.findByIdAndUpdate(id, userModel, { new: true })
+        return this.contact.findByIdAndUpdate(id, userModel, { $unset: { "verificationToken": "" } }, { new: true })
     }
     deleteUser = (id) => {
         return this.contact.findByIdAndDelete(id)
@@ -44,6 +46,12 @@ class User {
     updateToken = (id, tokenData) => {
         return this.contact.findByIdAndUpdate(id, { token: tokenData })
     }
+
+    deleteUserVerificationToken = (user) => {
+        const { id } = user //из объекта вычленяет id, а всё остальное равно userModel
+        return this.contact.findByIdAndUpdate(id, { $unset: { "verificationToken": "" } }, { new: true })
+    }
+
     deleteUserAvatar = (oldAvatarFileName) => {
         const pathToFileToDelete = 'public/images/' + oldAvatarFileName
         fs.unlink(pathToFileToDelete, function (err) {
